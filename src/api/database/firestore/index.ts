@@ -1,6 +1,5 @@
 import { initializeApp, applicationDefault, cert, ServiceAccount } from 'firebase-admin/app';
 import { getFirestore, Timestamp, FieldValue, Firestore } from 'firebase-admin/firestore';
-import { firestore } from "firebase-admin"
 
 
 const {
