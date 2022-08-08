@@ -1,5 +1,5 @@
 import express from 'express';
-// import './api/database';
+import './api/database';
 // import {  } = from 'cors';
 // import {  } = from 'helmet';
 // import {  } = from 'compression');
