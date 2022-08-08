@@ -1,5 +1,3 @@
-
-
 export type FindAllCondition = {
     fieldPath: string;
     opStr: string;
