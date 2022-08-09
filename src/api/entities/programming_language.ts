@@ -4,6 +4,8 @@ import { Entity } from '../core/Entity';
 type ProgrammingLanguageProps = {    
     name: string;
     full_name?: string;
+    created_at?: number;
+    updated_at?: number;
 };
 
 export class ProgrammingLanguage extends Entity <ProgrammingLanguageProps> {

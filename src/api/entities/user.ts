@@ -1,12 +1,15 @@
 import { Entity } from '../core/Entity';
 
+
+// I will make this just as a survey for now.
+// Make the auth if I have time
 export type UserProps = {    
     first_name: string;
     last_name: string;
     email: string;
-    password: string;
-    development_type?: string;
-    created_at?: number; 
+    password?: string; // Temporary solution
+    created_at?: number;
+    updated_at?: number;
 };
 
 export class User extends Entity <UserProps> {

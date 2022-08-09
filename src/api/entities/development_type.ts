@@ -3,6 +3,8 @@ import { Entity } from '../core/Entity';
 
 export type DevelopmentTypeProps = {
     name: string;
+    created_at?: number;
+    updated_at?: number;
 };
 
 export class DevelopmentType extends Entity <DevelopmentTypeProps> {
