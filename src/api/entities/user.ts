@@ -29,11 +29,7 @@ export class User extends Entity <UserProps> {
         return user;
     }
 
-
-
     private async hashPassword () {
         // TODO
     }
-
-
 }

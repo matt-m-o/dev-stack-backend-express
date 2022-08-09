@@ -1,7 +1,7 @@
 import { Entity } from '../core/Entity';
 
 
-type ProgrammingLanguageProps = {    
+export type ProgrammingLanguageProps = {    
     name: string;
     full_name?: string;
     created_at?: number;

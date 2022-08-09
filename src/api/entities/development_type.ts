@@ -14,7 +14,6 @@ export class DevelopmentType extends Entity <DevelopmentTypeProps> {
 
     static create (props: DevelopmentTypeProps, id?: string) {
         const developmentType = new DevelopmentType(props, id);
-
         return developmentType;
     }
 }
