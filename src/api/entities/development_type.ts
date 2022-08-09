@@ -1,7 +1,7 @@
 import { Entity } from '../core/Entity';
 
 
-type DevelopmentTypeProps = {
+export type DevelopmentTypeProps = {
     name: string;
 };
 
