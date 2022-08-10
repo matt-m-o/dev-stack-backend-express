@@ -93,10 +93,21 @@ export class DevelopmentTypesRepository implements IRepository <DevelopmentType>
 
         return developmentTypes;
     }
+
+    async delete(entity: DevelopmentType, checkExistence = true): Promise<boolean> {
+        let exists: DevelopmentType | null = null;
+
+        if (checkExistence)
+            exists = await this.findOne(entity);
+
+        if (exists || !checkExistence)
+            await this.queryTool.delete(entity.id);
+                                
+        return exists != null;
+    }
     
     async convertToEntity( data: any, id?: string ): Promise<DevelopmentType> {
         return await DevelopmentType.create(data, id);
     }
 
 }
-

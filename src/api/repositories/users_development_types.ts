@@ -100,6 +100,18 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
 
         return userDevelopmentType;
     }
+
+    async delete(entity: UserDevelopmentType, checkExistence = true): Promise<boolean> {
+        let exists: UserDevelopmentType | null = null;
+
+        if (checkExistence)
+            exists = await this.findOne(entity);
+
+        if (exists || !checkExistence)
+            await this.queryTool.delete(entity.id);
+                                
+        return exists != null;
+    }
     
     async convertToEntity( data: any, id?: string ): Promise<UserDevelopmentType> {
         return await UserDevelopmentType.create(data, id);

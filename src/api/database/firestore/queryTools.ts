@@ -67,4 +67,8 @@ export class QueryToolFirebase <T> {
 
         return docs;
     }
+
+    async delete (id: string) {        
+        return await this.collection.doc(id).delete();
+    }
 }

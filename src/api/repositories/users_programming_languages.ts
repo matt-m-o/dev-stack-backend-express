@@ -101,6 +101,18 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
 
         return userProgrammingLanguage;
     }
+
+    async delete(entity: UserProgrammingLanguage, checkExistence = true): Promise<boolean> {
+        let exists: UserProgrammingLanguage | null = null;
+
+        if (checkExistence)
+            exists = await this.findOne(entity);
+
+        if (exists || !checkExistence)
+            await this.queryTool.delete(entity.id);
+                                
+        return exists != null;
+    }
     
     async convertToEntity( data: any, id?: string ): Promise<UserProgrammingLanguage> {
         return await UserProgrammingLanguage.create(data, id);

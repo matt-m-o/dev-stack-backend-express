@@ -94,6 +94,18 @@ export class ProgrammingLanguagesRepository implements IRepository <ProgrammingL
 
         return programmingLanguages;
     }
+
+    async delete(entity: ProgrammingLanguage, checkExistence = true): Promise<boolean> {
+        let exists: ProgrammingLanguage | null = null;
+
+        if (checkExistence)
+            exists = await this.findOne(entity);
+
+        if (exists || !checkExistence)
+            await this.queryTool.delete(entity.id);
+                                
+        return exists != null;
+    }
     
     async convertToEntity( data: any, id?: string ): Promise<ProgrammingLanguage> {
         return await ProgrammingLanguage.create(data, id);
