@@ -8,7 +8,8 @@ import './api/database';
 
 import { 
     usersRoutes,
-    developmentTypesRoutes
+    developmentTypesRoutes,
+    programmingLanguagesRoutes,
  } from './api/routes';
 
 
@@ -19,5 +20,6 @@ app.use(express.json());
 
 app.use('/users', usersRoutes);
 app.use('/development-types', developmentTypesRoutes);
+app.use('/programming-languages', programmingLanguagesRoutes);
 
 export { app };

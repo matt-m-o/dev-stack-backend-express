@@ -1,12 +1,30 @@
 import { Router } from 'express';
-
-const router = Router();
-
-
-router.get('/', (req, res) => {    
-    return res.json({});
-});
+import { UsersController } from '../controllers'
 
 
+const {
+    getAllUsers,
+    getUser,
+    createUser,
+    deleteUser,
+    updateUser,
+} = new UsersController();
 
-export { router as UsersRouter };
+
+
+
+const routes = Router();
+
+routes.route('/')
+    .get( getAllUsers )
+    .post( createUser );
+
+routes.route('/:id')
+    .get( getUser )
+    .delete( deleteUser )
+    .patch( updateUser );
+
+
+
+
+export { routes as usersRoutes };

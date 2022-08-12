@@ -4,7 +4,7 @@ import { firestoreDB } from '..'
 // When calling '.data()' the '_fieldsProto' is going to be casted as <T>
 const converter = <T>() => ({
     toFirestore: (data: WithFieldValue<T>) => {
-        console.log(data);
+        //console.log(data);
         return data as Partial<T>;
     },
     fromFirestore: (snap: QueryDocumentSnapshot) => {
