@@ -3,24 +3,21 @@ import { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase-adm
 import { QueryToolFirebase, FindAllConditionFirebase } from "../database/firestore/queryTools";
 import { FindAllCondition } from "../core/Repository";
 import { IRepository } from "../core/Repository";
-import { DevelopmentType, DevelopmentTypeProps } from "../entities/development_type";
+import { DevelopmentType, DevelopmentTypeattributes } from "../entities/development_type";
 
 export class DevelopmentTypesRepository implements IRepository <DevelopmentType> {
-    private collection = collectionHelper<DevelopmentTypeProps>('development_types');
-    private queryTool = new QueryToolFirebase<DevelopmentTypeProps>(this.collection);
+    private collection = collectionHelper<DevelopmentTypeattributes>('development_types');
+    private queryTool = new QueryToolFirebase<DevelopmentTypeattributes>(this.collection);
+
 
     async create(entity: DevelopmentType) {
-        const idExists = await this.findOne({id: entity.id});
-        const nameExists = await this.findOne({name: entity.props.name});
 
-        if (idExists || nameExists) throw new Error("duplicated-development-type");
-
-        const { created_at } = entity.props;
+        const { created_at } = entity.attributes;
 
         const docRef = this.collection.doc(entity.id);
 
         await docRef.set({
-            ...entity.props,
+            ...entity.attributes,
             created_at: created_at ? Timestamp.fromMillis(created_at) : Timestamp.now(),
         });
 
@@ -28,19 +25,16 @@ export class DevelopmentTypesRepository implements IRepository <DevelopmentType>
     }
 
     async update(entity:DevelopmentType) {
-        const developmentTypeExists = await this.findOne({id: entity.id});
-
-        if (!developmentTypeExists) throw new Error("development-type-not-found");        
-
-        const { created_at } = entity.props;
+    
+        const { created_at } = entity.attributes;
 
         const docRef = this.collection.doc(entity.id);
-        const props = {
-            ...entity.props,
+        const attributes = {
+            ...entity.attributes,
             created_at:  created_at ? Timestamp.fromMillis(created_at) : created_at,
             updated_at:  Timestamp.now(),
         }
-        await docRef.set(props);
+        await docRef.set(attributes);
 
         return entity;
     }
@@ -64,15 +58,20 @@ export class DevelopmentTypesRepository implements IRepository <DevelopmentType>
     }
 
     async findAll(fieldPath: string, opStr: string, value: any): Promise<DevelopmentType[]>;
-    async findAll(conditions: FindAllCondition[] ): Promise<DevelopmentType[]>
-    async findAll(arg1: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<DevelopmentType[]> { // Promise<DevelopmentType[]>
+    async findAll(conditions?: FindAllCondition[] ): Promise<DevelopmentType[]>
+    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<DevelopmentType[]> { // Promise<DevelopmentType[]>
         
         let conditions: FindAllCondition[] = [];
         let fieldPath: string = '';
-
-        if (typeof arg1 !== 'string') conditions = arg1;
-        else fieldPath = arg1;
-
+                
+        
+        if(arg1) {
+            if (arg1 && typeof arg1 !== 'string' )
+                conditions = arg1;
+                
+            else fieldPath = arg1;
+        }
+        
         if (fieldPath && opStr && value) {
             conditions.push(
                 { fieldPath, opStr, value } 
@@ -94,16 +93,8 @@ export class DevelopmentTypesRepository implements IRepository <DevelopmentType>
         return developmentTypes;
     }
 
-    async delete(entity: DevelopmentType, checkExistence = true): Promise<boolean> {
-        let exists: DevelopmentType | null = null;
-
-        if (checkExistence)
-            exists = await this.findOne(entity);
-
-        if (exists || !checkExistence)
-            await this.queryTool.delete(entity.id);
-                                
-        return exists != null;
+    async delete(entity: DevelopmentType): Promise<void> {               
+        await this.queryTool.delete(entity.id);
     }
     
     async convertToEntity( data: any, id?: string ): Promise<DevelopmentType> {

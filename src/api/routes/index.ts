@@ -1,6 +1,8 @@
-import { UsersRouter }  from './users';
+import { developmentTypesRoutes } from './development_types';
+import { usersRoutes }  from './users';
+
 
 export { 
-    UsersRouter,
-    
+    usersRoutes,
+    developmentTypesRoutes
 };

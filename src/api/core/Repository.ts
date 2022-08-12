@@ -11,9 +11,9 @@ export interface IRepository <T> {
     findOne( data: any ): Promise <T|null>;
 
     findAll( fieldPath: string, opStr: string, value: any ): Promise <T[]>;
-    findAll( conditions: FindAllCondition[], opStr?: string, value?: any ): Promise <T[]>;
+    findAll( conditions?: FindAllCondition[], opStr?: string, value?: any ): Promise <T[]>;
 
-    delete( entity: T, checkExistence?: boolean ): Promise <boolean>;
+    delete( entity: T ): Promise <void>;
 
     convertToEntity( data: any, id: string ): Promise <T>;
 }

@@ -6,14 +6,18 @@ import './api/database';
 
 // import {  } = from 'passport';
 
-import { UsersRouter } from './api/routes';
-// import './api/routes/auth'; 
+import { 
+    usersRoutes,
+    developmentTypesRoutes
+ } from './api/routes';
+
 
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/users', UsersRouter);
+app.use('/users', usersRoutes);
+app.use('/development-types', developmentTypesRoutes);
 
 export { app };
