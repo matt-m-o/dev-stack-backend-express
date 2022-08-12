@@ -3,11 +3,11 @@ import { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase-adm
 import { QueryToolFirebase, FindAllConditionFirebase } from "../database/firestore/queryTools";
 import { FindAllCondition } from "../core/Repository";
 import { IRepository } from "../core/Repository";
-import { DevelopmentType, DevelopmentTypeattributes } from "../entities/development_type";
+import { DevelopmentType, DevelopmentTypeAttributes } from "../entities/development_type";
 
 export class DevelopmentTypesRepository implements IRepository <DevelopmentType> {
-    private collection = collectionHelper<DevelopmentTypeattributes>('development_types');
-    private queryTool = new QueryToolFirebase<DevelopmentTypeattributes>(this.collection);
+    private collection = collectionHelper<DevelopmentTypeAttributes>('development_types');
+    private queryTool = new QueryToolFirebase<DevelopmentTypeAttributes>(this.collection);
 
 
     async create(entity: DevelopmentType) {
@@ -31,7 +31,7 @@ export class DevelopmentTypesRepository implements IRepository <DevelopmentType>
         const docRef = this.collection.doc(entity.id);
         const attributes = {
             ...entity.attributes,
-            created_at:  created_at ? Timestamp.fromMillis(created_at) : created_at,
+            created_at:  created_at ? Timestamp.fromMillis(created_at) : Timestamp.now(),
             updated_at:  Timestamp.now(),
         }
         await docRef.set(attributes);

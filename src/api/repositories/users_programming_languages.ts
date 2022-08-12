@@ -3,31 +3,21 @@ import { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase-adm
 import { QueryToolFirebase, FindAllConditionFirebase } from "../database/firestore/queryTools";
 import { FindAllCondition } from "../core/Repository";
 import { IRepository } from "../core/Repository";
-import { UserProgrammingLanguage, UserProgrammingLanguageProps } from "../entities/user_programming_language";
-
+import { UserProgrammingLanguage, UserProgrammingLanguageAttributes } from "../entities/user_programming_language";
 
 export class UsersProgrammingLanguagesRepository implements IRepository <UserProgrammingLanguage> {
-    private collection = collectionHelper<UserProgrammingLanguageProps>('users_programming_languages');
-    private queryTool = new QueryToolFirebase<UserProgrammingLanguageProps>(this.collection);
+    private collection = collectionHelper<UserProgrammingLanguageAttributes>('users_programming_languages');
+    private queryTool = new QueryToolFirebase<UserProgrammingLanguageAttributes>(this.collection);
+
 
     async create(entity: UserProgrammingLanguage) {
-        const idExists = await this.findOne({id: entity.id});
 
-        const { id_user, id_programming_language } = entity.props;
-
-        const exists = await this.findOne({
-            id_user,
-            id_programming_language
-        });
-
-        if (idExists && exists) throw new Error("duplicated-user-programming-language");
-
-        const { created_at } = entity.props;
+        const { created_at } = entity.attributes;
 
         const docRef = this.collection.doc(entity.id);
 
         await docRef.set({
-            ...entity.props,
+            ...entity.attributes,
             created_at: created_at ? Timestamp.fromMillis(created_at) : Timestamp.now(),
         });
 
@@ -35,20 +25,16 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
     }
 
     async update(entity: UserProgrammingLanguage) {
-        const userProgrammingLanguageExists = await this.findOne({id: entity.id});
 
-        if (!userProgrammingLanguageExists) throw new Error("user-programming-language-not-found");        
-
-        const { created_at } = entity.props;
+        const { created_at } = entity.attributes;
 
         const docRef = this.collection.doc(entity.id);
-        const props = {
-            ...entity.props,
-            created_at:  created_at ? Timestamp.fromMillis(created_at) : created_at,
+        const attributes = {
+            ...entity.attributes,
+            created_at:  created_at ? Timestamp.fromMillis(created_at) : Timestamp.now(),
             updated_at:  Timestamp.now(),
         };
-
-        await docRef.set(props);
+        await docRef.set(attributes);
 
         return entity;
     }
@@ -72,18 +58,23 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
     }
 
     async findAll(fieldPath: string, opStr: string, value: any): Promise<UserProgrammingLanguage[]>;
-    async findAll(conditions: FindAllCondition[] ): Promise<UserProgrammingLanguage[]>
-    async findAll(arg1: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<UserProgrammingLanguage[]> {
+    async findAll(conditions?: FindAllCondition[] ): Promise<UserProgrammingLanguage[]>
+    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<UserProgrammingLanguage[]> {
         
         let conditions: FindAllCondition[] = [];
         let fieldPath: string = '';
 
-        if (typeof arg1 !== 'string') conditions = arg1;
-        else fieldPath = arg1;
-
+        
+        if(arg1) {
+            if (arg1 && typeof arg1 !== 'string' )
+                conditions = arg1;
+                
+            else fieldPath = arg1;
+        }
+        
         if (fieldPath && opStr && value) {
             conditions.push(
-                { fieldPath, opStr, value }
+                { fieldPath, opStr, value } 
             );
         }
 
@@ -102,16 +93,8 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
         return userProgrammingLanguage;
     }
 
-    async delete(entity: UserProgrammingLanguage, checkExistence = true): Promise<boolean> {
-        let exists: UserProgrammingLanguage | null = null;
-
-        if (checkExistence)
-            exists = await this.findOne(entity);
-
-        if (exists || !checkExistence)
-            await this.queryTool.delete(entity.id);
-                                
-        return exists != null;
+    async delete(entity: UserProgrammingLanguage): Promise<void> {
+        await this.queryTool.delete(entity.id);
     }
     
     async convertToEntity( data: any, id?: string ): Promise<UserProgrammingLanguage> {

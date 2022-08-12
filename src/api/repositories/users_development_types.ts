@@ -3,51 +3,38 @@ import { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase-adm
 import { QueryToolFirebase, FindAllConditionFirebase } from "../database/firestore/queryTools";
 import { FindAllCondition } from "../core/Repository";
 import { IRepository } from "../core/Repository";
-import { UserDevelopmentType, UserDevelopmentTypeProps } from "../entities/user_development_type";
-
+import { UserDevelopmentType, UserDevelopmentTypeAttributes } from "../entities/user_development_type";
 
 export class UsersDevelopmentTypesRepository implements IRepository <UserDevelopmentType> {
-    private collection = collectionHelper<UserDevelopmentTypeProps>('users_development_types');
-    private queryTool = new QueryToolFirebase<UserDevelopmentTypeProps>(this.collection);
+    private collection = collectionHelper<UserDevelopmentTypeAttributes>('users_development_types');
+    private queryTool = new QueryToolFirebase<UserDevelopmentTypeAttributes>(this.collection);
 
-    async create(entity: UserDevelopmentType) {
-        const idExists = await this.findOne({id: entity.id});
 
-        const { id_user, id_development_type } = entity.props;
+    async create(entity: UserDevelopmentType) {        
 
-        const exists = await this.findOne({
-            id_user,
-            id_development_type
-        });
-
-        if (idExists && exists) throw new Error("duplicated-users-users-development-type");
-
-        const { created_at } = entity.props;
+        const { created_at } = entity.attributes;
 
         const docRef = this.collection.doc(entity.id);
 
         await docRef.set({
-            ...entity.props,
+            ...entity.attributes,
             created_at: created_at ? Timestamp.fromMillis(created_at) : Timestamp.now(),
         });
 
         return entity;
     }
 
-    async update(entity: UserDevelopmentType) {
-        const userDevelopmentTypeExists = await this.findOne({id: entity.id});
+    async update(entity: UserDevelopmentType) {        
 
-        if (!userDevelopmentTypeExists) throw new Error("users-development-type-not-found");        
-
-        const { created_at } = entity.props;
+        const { created_at } = entity.attributes;
 
         const docRef = this.collection.doc(entity.id);
-        const props = {
-            ...entity.props,
-            created_at:  created_at ? Timestamp.fromMillis(created_at) : created_at,
+        const attributes = {
+            ...entity.attributes,
+            created_at:  created_at ? Timestamp.fromMillis(created_at) : Timestamp.now(),
             updated_at:  Timestamp.now(),
         }
-        await docRef.set(props);
+        await docRef.set(attributes);
 
         return entity;
     }
@@ -71,15 +58,20 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
     }
 
     async findAll(fieldPath: string, opStr: string, value: any): Promise<UserDevelopmentType[]>;
-    async findAll(conditions: FindAllCondition[] ): Promise<UserDevelopmentType[]>
-    async findAll(arg1: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<UserDevelopmentType[]> {
+    async findAll(conditions?: FindAllCondition[] ): Promise<UserDevelopmentType[]>
+    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<UserDevelopmentType[]> {
         
         let conditions: FindAllCondition[] = [];
         let fieldPath: string = '';
-
-        if (typeof arg1 !== 'string') conditions = arg1;
-        else fieldPath = arg1;
-
+                
+        
+        if(arg1) {
+            if (arg1 && typeof arg1 !== 'string' )
+                conditions = arg1;
+                
+            else fieldPath = arg1;
+        }
+        
         if (fieldPath && opStr && value) {
             conditions.push(
                 { fieldPath, opStr, value } 
@@ -101,16 +93,8 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
         return userDevelopmentType;
     }
 
-    async delete(entity: UserDevelopmentType, checkExistence = true): Promise<boolean> {
-        let exists: UserDevelopmentType | null = null;
-
-        if (checkExistence)
-            exists = await this.findOne(entity);
-
-        if (exists || !checkExistence)
-            await this.queryTool.delete(entity.id);
-                                
-        return exists != null;
+    async delete(entity: UserDevelopmentType): Promise<void> {        
+        await this.queryTool.delete(entity.id);
     }
     
     async convertToEntity( data: any, id?: string ): Promise<UserDevelopmentType> {
