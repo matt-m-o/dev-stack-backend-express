@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DevelopmentTypesController } from '../controllers/'
+import { DevelopmentTypesController } from '../controllers'
 
 
 const {
@@ -9,6 +9,8 @@ const {
     deleteDevelopmentType,
     updateDevelopmentType,
 } = new DevelopmentTypesController();
+
+
 
 
 const routes = Router();

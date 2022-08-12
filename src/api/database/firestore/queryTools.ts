@@ -46,24 +46,30 @@ export class QueryToolFirebase <T> {
         return doc;
     }
 
-    async findAll (findAllConditions: FindAllConditionFirebase[]) {        
+    async findAll (findAllConditions?: FindAllConditionFirebase[]) {        
         let docs: QueryDocumentSnapshot<T>[] = [];
 
         let query: Query<T> | null = null;
 
 
-        for ( const {fieldPath, opStr, value} of findAllConditions ) {
-            query = this.collection.where(
-                fieldPath, opStr, value
-            );
-        }      
+        if (findAllConditions) {
+            for ( const {fieldPath, opStr, value} of findAllConditions ) {
+                query = this.collection.where(
+                    fieldPath, opStr, value
+                );
+            }
+        }
+          
                     
         if (query !== null) {
             const querySnapshot = await query.get()
 
             if (querySnapshot.docs.length > 0)
                 docs = querySnapshot.docs;
-        }        
+        }
+        else {
+            docs = (await this.collection.get()).docs;
+        }
 
         return docs;
     }

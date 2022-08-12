@@ -1,10 +1,10 @@
-import { Request, response, Response } from 'express';
-import { DevelopmentTypesServices } from '../services/development_types';
+import { Request, Response } from 'express';
+import { DevelopmentTypesServices } from '../services';
 
 export class DevelopmentTypesController {
     private developmentTypesServices: DevelopmentTypesServices; // TODO: Replace by interface
 
-    constructor( developmentTypesServices?: DevelopmentTypesServices ){
+    constructor( developmentTypesServices?: DevelopmentTypesServices ) {
         if (developmentTypesServices) {
             this.developmentTypesServices = developmentTypesServices;        
         } 
@@ -27,6 +27,7 @@ export class DevelopmentTypesController {
             });
 
         } catch (error) {
+            console.error(error);
             return res.status(400).json({
                 error: (error as Error).message
             });
@@ -50,9 +51,10 @@ export class DevelopmentTypesController {
 
             return res.json({
                 data: result
-            })
+            });
             
         } catch (error) {
+            console.error(error);
             return res.status(400).json({
                 error: (error as Error).message
             });
@@ -64,9 +66,7 @@ export class DevelopmentTypesController {
     
         try {
 
-            const { id } = req.params;
-
-            console.log(id)
+            const { id } = req.params;            
 
             const { getDevelopmentType } = this.developmentTypesServices;
 
@@ -77,6 +77,7 @@ export class DevelopmentTypesController {
             });
             
         } catch (error) {
+            console.error(error);
             return res.status(400).json({
                 error: (error as Error).message
             });
@@ -96,6 +97,7 @@ export class DevelopmentTypesController {
             });
             
         } catch (error) {
+            console.error(error);
             return res.status(400).json({
                 error: (error as Error).message
             });
@@ -114,6 +116,7 @@ export class DevelopmentTypesController {
             return res.status(204).json({});
             
         } catch (error) {
+            console.error(error);
             return res.status(400).json({
                 error: (error as Error).message
             });

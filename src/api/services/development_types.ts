@@ -4,42 +4,38 @@ import { DevelopmentTypesRepository } from "../repositories/development_types";
 type DevelopmentTypeCreateParams = { name: string; }
 
 type DevelopmentTypeUpdateParams = {
-    id?: string;
+    id: string;
     name?: string; 
 }
 
 type DevelopmentTypeGetParams = {
-    id?: string;
+    id: string;
     name?: string;
 }
 
 export class DevelopmentTypesServices {
 
-    private developmentTypesRepository: DevelopmentTypesRepository; // TODO: Replace by interface " IDevelopmentTypesRepository "
+    private repository: DevelopmentTypesRepository; // TODO: Replace by interface " IDevelopmentTypesRepository "
 
     constructor (repo?: DevelopmentTypesRepository) {
         if (repo) 
-            this.developmentTypesRepository = repo;
+            this.repository = repo;
         else 
-            this.developmentTypesRepository = new DevelopmentTypesRepository();
+            this.repository = new DevelopmentTypesRepository();
     }    
 
 
     createDevelopmentType = async ({ name }: DevelopmentTypeCreateParams): Promise<DevelopmentType> => {        
         
-        const exists = await this.developmentTypesRepository.findOne({ name });
+        const exists = await this.repository.findOne({ name });
 
-        if (exists != null) throw new Error("duplicated-development-type");
-
-        console.log(name)
+        if (exists != null) throw new Error("duplicated-development-type");        
 
         const developmentType = await DevelopmentType.create({
             name
-        });
+        });        
 
-        console.log(developmentType);
-
-        await this.developmentTypesRepository.create(developmentType);
+        await this.repository.create(developmentType);
 
         return developmentType;        
     }
@@ -47,15 +43,17 @@ export class DevelopmentTypesServices {
 
     updateDevelopmentType = async({ id, name }: DevelopmentTypeUpdateParams): Promise<DevelopmentType> => {
     
-        const developmentType = await this.developmentTypesRepository.findOne({            
+        const developmentType = await this.repository.findOne({            
             id,
         });
         
-        if (!developmentType) throw new Error('development-type-not-found');
+        if (!developmentType) throw new Error('not-found-development-type');
         
-        developmentType.attributes.name = name ? name : developmentType.attributes.name;
+        
+        if (name) developmentType.attributes.name = name;
+        
 
-        await this.developmentTypesRepository.update(developmentType);
+        await this.repository.update(developmentType);
 
         return developmentType;        
     }
@@ -63,32 +61,30 @@ export class DevelopmentTypesServices {
 
     getDevelopmentType = async({ id }: DevelopmentTypeGetParams): Promise<DevelopmentType | null> => {
     
-        const developmentType = await this.developmentTypesRepository.findOne({            
+        const developmentType = await this.repository.findOne({            
             id
         });
 
-        return developmentType;
-        
+        return developmentType;        
     }
 
     getAllDevelopmentTypes = async (): Promise<DevelopmentType[] | null> => {
     
-        const developmentTypes = await this.developmentTypesRepository.findAll();
+        const developmentTypes = await this.repository.findAll();
 
-        return developmentTypes;
-        
+        return developmentTypes;        
     }
 
 
     deleteDevelopmentType = async(id: string): Promise<boolean | null> => {
     
-        const developmentType = await this.developmentTypesRepository.findOne({            
+        const developmentType = await this.repository.findOne({            
             id
         });
 
-        if (!developmentType) throw new Error('development-type-not-found');
+        if (!developmentType) throw new Error('not-found-development-type');
 
-        await this.developmentTypesRepository.delete(developmentType);
+        await this.repository.delete(developmentType);
 
         return true;        
     }
