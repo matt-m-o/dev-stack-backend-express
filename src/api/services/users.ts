@@ -22,19 +22,19 @@ type UserGetParams = {
 
 export class UsersServices {
 
-    private repository: UsersRepository;
+    private repo: UsersRepository;
 
     constructor (repo?: UsersRepository) {
         if (repo) 
-            this.repository = repo;
+            this.repo = repo;
         else 
-            this.repository = new UsersRepository();
+            this.repo = new UsersRepository();
     }    
 
 
     createUser = async ({ first_name, last_name, email }: UserCreateParams): Promise<User> => {        
         
-        const exists = await this.repository.findOne({ email });
+        const exists = await this.repo.findOne({ email });
 
         if (exists != null) throw new Error("duplicated-user");        
 
@@ -44,7 +44,7 @@ export class UsersServices {
             email,
         });        
 
-        await this.repository.create(user);
+        await this.repo.create(user);
 
         return user;        
     }
@@ -52,7 +52,7 @@ export class UsersServices {
 
     updateUser = async({ id, first_name, last_name }: UserUpdateParams): Promise<User> => {
     
-        const user = await this.repository.findOne({            
+        const user = await this.repo.findOne({            
             id,
         });
         
@@ -64,7 +64,7 @@ export class UsersServices {
         if (last_name) user.attributes.last_name = last_name;
                         
 
-        await this.repository.update(user);
+        await this.repo.update(user);
 
         return user;        
     }
@@ -72,7 +72,7 @@ export class UsersServices {
 
     getUser = async({ id }: UserGetParams): Promise<User | null> => {
     
-        const user = await this.repository.findOne({            
+        const user = await this.repo.findOne({            
             id
         });
 
@@ -81,7 +81,7 @@ export class UsersServices {
 
     getAllUsers = async (): Promise<User[] | null> => {
     
-        const users = await this.repository.findAll();
+        const users = await this.repo.findAll();
 
         return users;        
     }
@@ -89,13 +89,13 @@ export class UsersServices {
 
     deleteUser = async(id: string): Promise<boolean | null> => {
     
-        const user = await this.repository.findOne({            
+        const user = await this.repo.findOne({            
             id
         });
 
         if (!user) throw new Error('not-found-user');
 
-        await this.repository.delete(user);
+        await this.repo.delete(user);
 
         return true;        
     }

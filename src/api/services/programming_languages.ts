@@ -10,30 +10,30 @@ type ProgrammingLanguageCreateParams = {
 type ProgrammingLanguageUpdateParams = {
     id: string;
     name?: string; 
-    full_name?: string
+    full_name?: string;
 }
 
 type ProgrammingLanguageGetParams = {
     id: string;
     name?: string;
-    full_name?: string
+    full_name?: string;
 }
 
 export class ProgrammingLanguagesServices {
 
-    private repository: ProgrammingLanguagesRepository;
+    private repo: ProgrammingLanguagesRepository;
 
     constructor (repo?: ProgrammingLanguagesRepository) {
         if (repo) 
-            this.repository = repo;
+            this.repo = repo;
         else 
-            this.repository = new ProgrammingLanguagesRepository();
+            this.repo = new ProgrammingLanguagesRepository();
     }    
 
 
     createProgrammingLanguage = async ({ name, full_name }: ProgrammingLanguageCreateParams): Promise<ProgrammingLanguage> => {        
         
-        const exists = await this.repository.findOne({ name });
+        const exists = await this.repo.findOne({ name });
 
         if (exists != null) throw new Error("duplicated-programming-language");        
 
@@ -42,7 +42,7 @@ export class ProgrammingLanguagesServices {
             full_name,
         });        
 
-        await this.repository.create(programmingLanguage);
+        await this.repo.create(programmingLanguage);
 
         return programmingLanguage;        
     }
@@ -50,7 +50,7 @@ export class ProgrammingLanguagesServices {
 
     updateProgrammingLanguage = async({ id, name, full_name }: ProgrammingLanguageUpdateParams): Promise<ProgrammingLanguage> => {
     
-        const programmingLanguage = await this.repository.findOne({            
+        const programmingLanguage = await this.repo.findOne({            
             id,
         });
         
@@ -62,7 +62,7 @@ export class ProgrammingLanguagesServices {
         if (full_name) programmingLanguage.attributes.full_name = full_name;
                         
 
-        await this.repository.update(programmingLanguage);
+        await this.repo.update(programmingLanguage);
 
         return programmingLanguage;        
     }
@@ -70,7 +70,7 @@ export class ProgrammingLanguagesServices {
 
     getProgrammingLanguage = async({ id }: ProgrammingLanguageGetParams): Promise<ProgrammingLanguage | null> => {
     
-        const programmingLanguage = await this.repository.findOne({            
+        const programmingLanguage = await this.repo.findOne({            
             id
         });
 
@@ -79,7 +79,7 @@ export class ProgrammingLanguagesServices {
 
     getAllProgrammingLanguages = async (): Promise<ProgrammingLanguage[] | null> => {
     
-        const programmingLanguages = await this.repository.findAll();
+        const programmingLanguages = await this.repo.findAll();
 
         return programmingLanguages;        
     }
@@ -87,13 +87,13 @@ export class ProgrammingLanguagesServices {
 
     deleteProgrammingLanguage = async(id: string): Promise<boolean | null> => {
     
-        const programmingLanguage = await this.repository.findOne({            
+        const programmingLanguage = await this.repo.findOne({            
             id
         });
 
         if (!programmingLanguage) throw new Error('not-found-programming-language');
 
-        await this.repository.delete(programmingLanguage);
+        await this.repo.delete(programmingLanguage);
 
         return true;        
     }
