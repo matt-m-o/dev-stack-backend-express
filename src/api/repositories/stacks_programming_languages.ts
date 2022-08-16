@@ -3,14 +3,14 @@ import { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase-adm
 import { QueryToolFirebase, FindAllConditionFirebase } from "../database/firestore/queryTools";
 import { FindAllCondition } from "../core/Repository";
 import { IRepository } from "../core/Repository";
-import { UserProgrammingLanguage, UserProgrammingLanguageAttributes } from "../entities/user_programming_language";
+import { StackProgrammingLanguage, StackProgrammingLanguageAttributes } from "../entities/stack_programming_language";
 
-export class UsersProgrammingLanguagesRepository implements IRepository <UserProgrammingLanguage> {
-    private collection = collectionHelper<UserProgrammingLanguageAttributes>('users_programming_languages');
-    private queryTool = new QueryToolFirebase<UserProgrammingLanguageAttributes>(this.collection);
+export class StacksProgrammingLanguagesRepository implements IRepository <StackProgrammingLanguage> {
+    private collection = collectionHelper<StackProgrammingLanguageAttributes>('stacks_programming_languages');
+    private queryTool = new QueryToolFirebase<StackProgrammingLanguageAttributes>(this.collection);
 
 
-    async create(entity: UserProgrammingLanguage) {
+    async create(entity: StackProgrammingLanguage) {
 
         const { created_at } = entity.attributes;
 
@@ -24,7 +24,7 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
         return entity;
     }
 
-    async update(entity: UserProgrammingLanguage) {
+    async update(entity: StackProgrammingLanguage) {
 
         const { created_at } = entity.attributes;
 
@@ -39,7 +39,7 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
         return entity;
     }
 
-    async findOne(data: any): Promise<UserProgrammingLanguage | null> {
+    async findOne(data: any): Promise<StackProgrammingLanguage | null> {
         let doc: DocumentSnapshot | QueryDocumentSnapshot | null = null;
 
 
@@ -52,14 +52,14 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
 
         if (!doc) return null;        
 
-        const userProgrammingLanguage = await this.convertToEntity(doc.data(), doc.id);
+        const stackProgrammingLanguage = await this.convertToEntity(doc.data(), doc.id);
         
-        return userProgrammingLanguage;
+        return stackProgrammingLanguage;
     }
 
-    async findAll(fieldPath: string, opStr: string, value: any): Promise<UserProgrammingLanguage[]>;
-    async findAll(conditions?: FindAllCondition[] ): Promise<UserProgrammingLanguage[]>
-    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<UserProgrammingLanguage[]> {
+    async findAll(fieldPath: string, opStr: string, value: any): Promise<StackProgrammingLanguage[]>;
+    async findAll(conditions?: FindAllCondition[] ): Promise<StackProgrammingLanguage[]>
+    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<StackProgrammingLanguage[]> {
         
         let conditions: FindAllCondition[] = [];
         let fieldPath: string = '';
@@ -80,25 +80,25 @@ export class UsersProgrammingLanguagesRepository implements IRepository <UserPro
 
         const docs = await this.queryTool.findAll(conditions as FindAllConditionFirebase[]);
 
-        const userProgrammingLanguage: UserProgrammingLanguage[] = [];
+        const stackProgrammingLanguage: StackProgrammingLanguage[] = [];
 
         for (const doc of docs) {
             const data = doc.data();
             const id = doc.id;
 
             if (data && id)
-                userProgrammingLanguage.push(await this.convertToEntity(data, id));
+                stackProgrammingLanguage.push(await this.convertToEntity(data, id));
         }
 
-        return userProgrammingLanguage;
+        return stackProgrammingLanguage;
     }
 
-    async delete(entity: UserProgrammingLanguage): Promise<void> {
+    async delete(entity: StackProgrammingLanguage): Promise<void> {
         await this.queryTool.delete(entity.id);
     }
     
-    async convertToEntity( data: any, id?: string ): Promise<UserProgrammingLanguage> {
-        return await UserProgrammingLanguage.create(data, id);
+    async convertToEntity( data: any, id?: string ): Promise<StackProgrammingLanguage> {
+        return await StackProgrammingLanguage.create(data, id);
     }
 
 }

@@ -3,14 +3,14 @@ import { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase-adm
 import { QueryToolFirebase, FindAllConditionFirebase } from "../database/firestore/queryTools";
 import { FindAllCondition } from "../core/Repository";
 import { IRepository } from "../core/Repository";
-import { UserDevelopmentType, UserDevelopmentTypeAttributes } from "../entities/user_development_type";
+import { Stack, StackAttributes } from "../entities/stack";
 
-export class UsersDevelopmentTypesRepository implements IRepository <UserDevelopmentType> {
-    private collection = collectionHelper<UserDevelopmentTypeAttributes>('users_development_types');
-    private queryTool = new QueryToolFirebase<UserDevelopmentTypeAttributes>(this.collection);
+export class StacksRepository implements IRepository <Stack> {
+    private collection = collectionHelper<StackAttributes>('stacks');
+    private queryTool = new QueryToolFirebase<StackAttributes>(this.collection);
 
 
-    async create(entity: UserDevelopmentType) {        
+    async create(entity: Stack) {        
 
         const { created_at } = entity.attributes;
 
@@ -24,7 +24,7 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
         return entity;
     }
 
-    async update(entity: UserDevelopmentType) {        
+    async update(entity: Stack) {        
 
         const { created_at } = entity.attributes;
 
@@ -39,9 +39,9 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
         return entity;
     }
 
-    async findOne(data: any): Promise<UserDevelopmentType | null> {
+    async findOne(data: any): Promise<Stack | null> {
         let doc: DocumentSnapshot | QueryDocumentSnapshot | null = null;
-
+        
 
         if (data?.id) {
             doc = await this.queryTool.findByID(data.id);
@@ -52,14 +52,14 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
 
         if (!doc) return null;        
 
-        const userDevelopmentType = await this.convertToEntity(doc.data(), doc.id);
+        const stack = await this.convertToEntity(doc.data(), doc.id);
         
-        return userDevelopmentType;
+        return stack;
     }
 
-    async findAll(fieldPath: string, opStr: string, value: any): Promise<UserDevelopmentType[]>;
-    async findAll(conditions?: FindAllCondition[] ): Promise<UserDevelopmentType[]>
-    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<UserDevelopmentType[]> {
+    async findAll(fieldPath: string, opStr: string, value: any): Promise<Stack[]>;
+    async findAll(conditions?: FindAllCondition[] ): Promise<Stack[]>
+    async findAll(arg1?: FindAllCondition[] | string, opStr?: string, value?: any ): Promise<Stack[]> {
         
         let conditions: FindAllCondition[] = [];
         let fieldPath: string = '';
@@ -80,25 +80,25 @@ export class UsersDevelopmentTypesRepository implements IRepository <UserDevelop
 
         const docs = await this.queryTool.findAll(conditions as FindAllConditionFirebase[]);
 
-        const userDevelopmentType: UserDevelopmentType[] = [];
+        const stack: Stack[] = [];
 
         for (const doc of docs) {
             const data = doc.data();
             const id = doc.id;
 
             if (data && id)
-               userDevelopmentType.push(await this.convertToEntity(data, id));
+               stack.push(await this.convertToEntity(data, id));
         }
 
-        return userDevelopmentType;
+        return stack;
     }
 
-    async delete(entity: UserDevelopmentType): Promise<void> {        
+    async delete(entity: Stack): Promise<void> {        
         await this.queryTool.delete(entity.id);
     }
     
-    async convertToEntity( data: any, id?: string ): Promise<UserDevelopmentType> {
-        return await UserDevelopmentType.create(data, id);
+    async convertToEntity( data: any, id?: string ): Promise<Stack> {
+        return await Stack.create(data, id);
     }
 
 }

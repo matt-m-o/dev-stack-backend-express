@@ -47,6 +47,7 @@ export class DevelopmentTypesRepository implements IRepository <DevelopmentType>
             doc = await this.queryTool.findByID(data.id);
         }
         else {
+            console.log(data);
             doc = await this.queryTool.findOne(data);
         }
 

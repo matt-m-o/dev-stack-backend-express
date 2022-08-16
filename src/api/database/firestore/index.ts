@@ -22,3 +22,5 @@ initializeApp({
 });
 
 export const firestoreDB = getFirestore();
+
+firestoreDB.settings({ ignoreUndefinedProperties: true })

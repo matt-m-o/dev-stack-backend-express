@@ -1,4 +1,4 @@
-import { CollectionReference, DocumentSnapshot, Query, QueryDocumentSnapshot, Timestamp, WhereFilterOp } from 'firebase-admin/firestore';
+import { CollectionReference, DocumentSnapshot, FieldPath, Query, QueryDocumentSnapshot, Timestamp, WhereFilterOp } from 'firebase-admin/firestore';
 
 
 export type FindAllConditionFirebase = {
@@ -53,10 +53,17 @@ export class QueryToolFirebase <T> {
 
 
         if (findAllConditions) {
-            for ( const {fieldPath, opStr, value} of findAllConditions ) {
-                query = this.collection.where(
-                    fieldPath, opStr, value
-                );
+            for ( const { fieldPath, opStr, value } of findAllConditions ) {
+                let _fieldPath: any = null;
+
+                if (fieldPath === 'id') {
+                    _fieldPath = FieldPath.documentId()
+                }
+
+                if (_fieldPath)
+                    query = this.collection.where( _fieldPath, opStr, value );
+                else
+                    query = this.collection.where( fieldPath, opStr, value );
             }
         }
           
