@@ -147,7 +147,7 @@ export class StacksServices {
         );
         
 
-        const programming_languages = await this.programmingLanguagesRepo.findAll(
+        const programmingLanguages = await this.programmingLanguagesRepo.findAll(
             'id', 'in', programmingLanguagesIDs
         );
         
@@ -156,7 +156,7 @@ export class StacksServices {
         
         result.attributes.development_type = devType;
         
-        result.attributes.programming_languages = programming_languages;
+        result.attributes.programming_languages = programmingLanguages;
 
         return result;
     }
@@ -171,6 +171,7 @@ export class StacksServices {
         
         const results = [];
 
+        // TODO: Optimizations
         // Getting the objects from id reference (there are better ways to do this...)
         for (const item of stacks) {
 
@@ -184,18 +185,28 @@ export class StacksServices {
                 ),
             ]);
             
-            const result = item as any;
+            const result = item as any;            
 
-            result.attributes.development_type = devType;
+            const programmingLanguagesIDs = stackProgrammingLanguages.map( item  => 
+                item.attributes.id_programming_language 
+            );
 
-            result.attributes.programming_languages = stackProgrammingLanguages
+            const programmingLanguages = await this.programmingLanguagesRepo.findAll(
+                'id', 'in', programmingLanguagesIDs
+            );
+            
 
-            results.push(result);            
+            result.relationships = {
+                development_type: devType,
+                programming_languages: programmingLanguages
+            }
+
+            results.push(result);
         }        
 
         return results;
     }
-
+    
 
     deleteStack = async(id: string): Promise<boolean | null> => {
     
