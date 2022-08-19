@@ -1,6 +1,8 @@
 import express from 'express';
+import http from 'http';
+import cors from 'cors';
+
 import './api/database';
-// import {  } = from 'cors';
 // import {  } = from 'helmet';
 // import {  } = from 'compression');
 
@@ -15,6 +17,8 @@ import {
 
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
