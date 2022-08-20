@@ -111,11 +111,11 @@ export class UsersController {
 
     deleteUser = async (req: Request, res: Response) => {
         try {
-            const { id } = req.params;
+            const { id_user } = req.params;
 
             const { deleteUser } = this.usersServices;
 
-            await deleteUser(id);
+            await deleteUser(id_user);
 
             return res.status(204).json({});
             

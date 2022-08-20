@@ -4,6 +4,7 @@ import { UsersRepository } from "../repositories/users";
 import { StacksRepository } from "../repositories/stacks";
 import { ProgrammingLanguagesRepository } from "../repositories/programming_languages";
 import { StacksProgrammingLanguagesRepository } from "../repositories/stacks_programming_languages";
+import { ProgrammingLanguage } from "../entities/programming_language";
 
 
 
@@ -64,8 +65,12 @@ export class StacksServices {
 
 
     createStack = async ({ id_user, id_development_type }: StackCreateParams): Promise<Stack> => {        
-        
+
+        console.log({id_user, id_development_type})
+
         const exists = await this.repo.findOne({ id_user, id_development_type });
+
+        console.log({exists});
 
         if (exists != null) throw new Error("duplicated-stack");
 
@@ -147,16 +152,21 @@ export class StacksServices {
         );
         
 
-        const programmingLanguages = await this.programmingLanguagesRepo.findAll(
-            'id', 'in', programmingLanguagesIDs
-        );
+        let programmingLanguages: ProgrammingLanguage[] = [];
+            
+        if (programmingLanguagesIDs.length > 0) {
+            programmingLanguages = await this.programmingLanguagesRepo.findAll(
+                'id', 'in', programmingLanguagesIDs
+            );    
+        }
         
         
         const result = stack as any;
         
-        result.attributes.development_type = devType;
-        
-        result.attributes.programming_languages = programmingLanguages;
+        result.relationships = {
+            development_type: devType,
+            programming_languages: programmingLanguages
+        }
 
         return result;
     }
@@ -188,13 +198,16 @@ export class StacksServices {
             const result = item as any;            
 
             const programmingLanguagesIDs = stackProgrammingLanguages.map( item  => 
-                item.attributes.id_programming_language 
-            );
-
-            const programmingLanguages = await this.programmingLanguagesRepo.findAll(
-                'id', 'in', programmingLanguagesIDs
+                item.attributes.id_programming_language
             );
             
+            let programmingLanguages: ProgrammingLanguage[] = [];
+            
+            if (programmingLanguagesIDs.length > 0) {
+                programmingLanguages = await this.programmingLanguagesRepo.findAll(
+                    'id', 'in', programmingLanguagesIDs
+                );    
+            }
 
             result.relationships = {
                 development_type: devType,

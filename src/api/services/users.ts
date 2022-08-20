@@ -83,12 +83,15 @@ export class UsersServices {
     
         const users = await this.repo.findAll();
 
-        return users;        
+        return users.map( user => {
+            user.attributes.password = undefined;
+            return user;
+        });
     }
 
 
     deleteUser = async(id: string): Promise<boolean | null> => {
-    
+                
         const user = await this.repo.findOne({            
             id
         });

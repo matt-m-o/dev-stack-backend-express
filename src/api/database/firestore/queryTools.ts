@@ -31,7 +31,12 @@ export class QueryToolFirebase <T> {
         let query: Query<T> | null = null;
 
         for (const [key, value] of entries) {
-            query = this.collection.where(
+            let target;
+
+            if (!query) target = this.collection;
+            else target = query;
+
+            query = target.where(
                 key, '==', value
             );
         }            
@@ -53,17 +58,22 @@ export class QueryToolFirebase <T> {
 
 
         if (findAllConditions) {
-            for ( const { fieldPath, opStr, value } of findAllConditions ) {
-                let _fieldPath: any = null;
+            for ( const { fieldPath, opStr, value } of findAllConditions ) {                                
+                let _fieldPath: any = null;                
 
                 if (fieldPath === 'id') {
                     _fieldPath = FieldPath.documentId()
                 }
 
+                let target;
+
+                if (!query) target = this.collection;
+                else target = query;
+
                 if (_fieldPath)
-                    query = this.collection.where( _fieldPath, opStr, value );
+                    query = target.where( _fieldPath, opStr, value );
                 else
-                    query = this.collection.where( fieldPath, opStr, value );
+                    query = target.where( fieldPath, opStr, value );
             }
         }
           
