@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import { StacksServices } from '../services/stacks';
+import { UsersStacksServices } from '../services/users_stacks';
 
 
 
-export class StacksController {
-    private stacksServices: StacksServices; // TODO: Replace by interface
+export class UsersStacksController {
+    private stacksServices: UsersStacksServices; // TODO: Replace by interface
 
-    constructor( stacksServices?: StacksServices ) {
+    constructor( stacksServices?: UsersStacksServices ) {
         if (stacksServices) {
             this.stacksServices = stacksServices;        
         } 
-        else this.stacksServices = new StacksServices();
+        else this.stacksServices = new UsersStacksServices();
     }
 
     createStack = async (req: Request, res: Response) => {

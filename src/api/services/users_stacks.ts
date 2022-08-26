@@ -29,7 +29,7 @@ type StackGetAllParams = {
     id_user?: string;    
 }
 
-export class StacksServices {
+export class UsersStacksServices {
 
     private repo: StacksRepository;
     private usersRepo: UsersRepository;
@@ -135,7 +135,7 @@ export class StacksServices {
         if (!stack) throw new Error('not-found-stack');
 
 
-        const [devType, stackProgrammingLanguages] = await Promise.all([
+        const [devType, stackProgrammingLanguages] = await Promise  .all([
             this.developmentTypesRepo.findOne({
                 id: stack?.attributes.id_development_type
             }),
@@ -157,7 +157,7 @@ export class StacksServices {
         if (programmingLanguagesIDs.length > 0) {
             programmingLanguages = await this.programmingLanguagesRepo.findAll(
                 'id', 'in', programmingLanguagesIDs
-            );    
+            );
         }
         
         
@@ -230,6 +230,15 @@ export class StacksServices {
         if (!stack) throw new Error('not-found-stack');
 
         await this.repo.delete(stack);
+
+        this.stackProgrammingLanguagesRepo.findAll(
+            'id_stack', '==', stack.id
+        )
+            .then( items => {
+                for (const item of items) {
+                    this.stackProgrammingLanguagesRepo.delete(item);
+                }                
+            })        
 
         return true;        
     }

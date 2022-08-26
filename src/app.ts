@@ -12,6 +12,7 @@ import {
     usersRoutes,
     developmentTypesRoutes,
     programmingLanguagesRoutes,
+    stacksRoutes,
  } from './api/routes';
 
 
@@ -25,5 +26,6 @@ app.use(express.json());
 app.use('/users', usersRoutes);
 app.use('/development-types', developmentTypesRoutes);
 app.use('/programming-languages', programmingLanguagesRoutes);
+app.use('/stacks', stacksRoutes);
 
 export { app };

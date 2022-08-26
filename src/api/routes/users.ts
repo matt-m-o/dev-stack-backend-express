@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UsersController } from '../controllers';
 
-import { stacksRoutes } from './stacks';
+import { userStacksRoutes } from './users_stacks';
 import { stacksProgrammingLanguagesRoutes } from './stacks_programming_languages';
 
 
@@ -18,7 +18,7 @@ const {
 
 const routes = Router();
 
-routes.use('/:id_user/stacks', stacksRoutes);
+routes.use('/:id_user/stacks', userStacksRoutes);
 routes.use('/:id_user/programming-languages', stacksProgrammingLanguagesRoutes); // Move to stacks
 
 routes.route('/')

@@ -42,13 +42,13 @@ export class UsersController {
     updateUser = async (req: Request, res: Response) => {
         
         try {
-            const { id } = req.params;
+            const { id_user } = req.params;
             const { first_name, last_name } = req.body;
 
             const { updateUser } = this.usersServices;
             
             const result = await updateUser({
-                id,
+                id: id_user,
                 first_name, last_name
             });
             
@@ -70,11 +70,11 @@ export class UsersController {
     
         try {
 
-            const { id } = req.params;            
+            const { id_user } = req.params;            
 
             const { getUser } = this.usersServices;
 
-            const result = await getUser({ id });
+            const result = await getUser({ id: id_user });
 
             return res.json({
                 data: result
