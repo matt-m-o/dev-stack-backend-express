@@ -1,10 +1,12 @@
 ## Dev Stack Survey - Backend ##
 
+</br>
+
 > [Website (Firebase hosting)](https://dev-stack-app-2f7a6.web.app/) |
 > [Repository](https://github.com/matt-m-o/dev-stack-frontend-nextjs)
 
 > [REST API (Heroku)](https://dev-stack-api.herokuapp.com/) |
-> [Repository](https://github.com/matt-m-o/dev-stack-backend-express/tree/develop)
+> [Repository](https://github.com/matt-m-o/dev-stack-backend-express)
 
 </br>
 
@@ -27,7 +29,7 @@
 * Autenticação
 * Validação em todos os endpoints
 * Caching
-* Endpoints com estatísticas das respostas da pesquisa
+* Endpoints com estatísticas das respostas dos usuários
 * CRUD de frameworks
 * CRUD de libraries
 
