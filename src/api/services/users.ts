@@ -36,13 +36,13 @@ export class UsersServices {
         
         const exists = await this.repo.findOne({ email });
 
-        if (exists != null) throw new Error("duplicated-user");        
+        if (exists != null) throw new Error("duplicated-user");
 
         const user = await User.create({
             first_name,
             last_name,
             email,
-        });        
+        });
 
         await this.repo.create(user);
 

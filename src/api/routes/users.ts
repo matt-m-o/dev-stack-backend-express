@@ -3,6 +3,8 @@ import { UsersController } from '../controllers';
 
 import { userStacksRoutes } from './users_stacks';
 import { stacksProgrammingLanguagesRoutes } from './stacks_programming_languages';
+import { validateRequest } from '../middlewares/requests_validation';
+import { createUserSchema } from '../schemas/users';
 
 
 const {
@@ -23,7 +25,7 @@ routes.use('/:id_user/programming-languages', stacksProgrammingLanguagesRoutes);
 
 routes.route('/')
     .get( getAllUsers )
-    .post( createUser );
+    .post( validateRequest(createUserSchema), createUser );
 
 routes.route('/:id_user')
     .get( getUser )
