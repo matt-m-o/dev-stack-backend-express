@@ -1,18 +1,19 @@
 import { Entity } from '../core/Entity';
 
 
-type DevelopmentTypeProps = {
+export type DevelopmentTypeAttributes = {
     name: string;
+    created_at?: number;
+    updated_at?: number;
 };
 
-export class DevelopmentType extends Entity <DevelopmentTypeProps> {
-    private constructor (props: DevelopmentTypeProps, id?: string) {
-        super(props, id);
+export class DevelopmentType extends Entity <DevelopmentTypeAttributes> {
+    private constructor (attributes: DevelopmentTypeAttributes, id?: string) {
+        super(attributes, id);
     }
 
-    static create (props: DevelopmentTypeProps, id?: string) {
-        const developmentType = new DevelopmentType(props, id);
-
+    static create (attributes: DevelopmentTypeAttributes, id?: string) {
+        const developmentType = new DevelopmentType(attributes, id);
         return developmentType;
     }
 }

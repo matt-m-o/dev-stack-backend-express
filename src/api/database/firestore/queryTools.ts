@@ -1,4 +1,4 @@
-import { CollectionReference, DocumentSnapshot, Query, QueryDocumentSnapshot, Timestamp, WhereFilterOp } from 'firebase-admin/firestore';
+import { CollectionReference, DocumentSnapshot, FieldPath, Query, QueryDocumentSnapshot, Timestamp, WhereFilterOp } from 'firebase-admin/firestore';
 
 
 export type FindAllConditionFirebase = {
@@ -31,7 +31,12 @@ export class QueryToolFirebase <T> {
         let query: Query<T> | null = null;
 
         for (const [key, value] of entries) {
-            query = this.collection.where(
+            let target;
+
+            if (!query) target = this.collection;
+            else target = query;
+
+            query = target.where(
                 key, '==', value
             );
         }            
@@ -46,25 +51,47 @@ export class QueryToolFirebase <T> {
         return doc;
     }
 
-    async findAll (findAllConditions: FindAllConditionFirebase[]) {        
+    async findAll (findAllConditions?: FindAllConditionFirebase[]) {        
         let docs: QueryDocumentSnapshot<T>[] = [];
 
         let query: Query<T> | null = null;
 
 
-        for ( const {fieldPath, opStr, value} of findAllConditions ) {
-            query = this.collection.where(
-                fieldPath, opStr, value
-            );
-        }      
+        if (findAllConditions) {
+            for ( const { fieldPath, opStr, value } of findAllConditions ) {                                
+                let _fieldPath: any = null;                
+
+                if (fieldPath === 'id') {
+                    _fieldPath = FieldPath.documentId()
+                }
+
+                let target;
+
+                if (!query) target = this.collection;
+                else target = query;
+
+                if (_fieldPath)
+                    query = target.where( _fieldPath, opStr, value );
+                else
+                    query = target.where( fieldPath, opStr, value );
+            }
+        }
+          
                     
         if (query !== null) {
             const querySnapshot = await query.get()
 
             if (querySnapshot.docs.length > 0)
                 docs = querySnapshot.docs;
-        }        
+        }
+        else {
+            docs = (await this.collection.get()).docs;
+        }
 
         return docs;
+    }
+
+    async delete (id: string) {        
+        return await this.collection.doc(id).delete();
     }
 }

@@ -1,21 +1,23 @@
 import { Entity } from '../core/Entity';
 
 
-type ProgrammingLanguageProps = {    
+export type ProgrammingLanguageAttributes = {    
     name: string;
     full_name?: string;
+    created_at?: number;
+    updated_at?: number;
 };
 
-export class ProgrammingLanguage extends Entity <ProgrammingLanguageProps> {
-    private constructor (props: ProgrammingLanguageProps, id?: string) {
-        super(props, id);
+export class ProgrammingLanguage extends Entity <ProgrammingLanguageAttributes> {
+    private constructor (attributes: ProgrammingLanguageAttributes, id?: string) {
+        super(attributes, id);
     }
 
-    static create (props: ProgrammingLanguageProps, id?: string) {
-        const programmingLanguage = new ProgrammingLanguage(props, id);
+    static create (attributes: ProgrammingLanguageAttributes, id?: string) {
+        const programmingLanguage = new ProgrammingLanguage(attributes, id);
 
-        if (!props.full_name) {
-            programmingLanguage.props.full_name = props.name;
+        if (!attributes.full_name) {
+            programmingLanguage.attributes.full_name = attributes.name;
         }
 
         return programmingLanguage;
