@@ -37,7 +37,8 @@
 
 
 ### Desenvolvido com  ###
-* Typescript
+* Node.js
+* TypeScript
 * Express
 * Firestore
 * Joi

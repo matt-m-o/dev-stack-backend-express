@@ -1,6 +1,6 @@
 import express from 'express';
-import http from 'http';
 import cors from 'cors';
+import { requestsLogger } from './api/middlewares/requests_logger';
 
 import './api/database';
 // import {  } = from 'helmet';
@@ -19,6 +19,7 @@ import {
 
 const app = express();
 
+app.use(requestsLogger);
 app.use(cors());
 
 app.use(express.json());
